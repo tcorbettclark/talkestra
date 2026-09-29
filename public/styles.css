@@ -473,6 +473,11 @@ section[id] { scroll-margin-top: 5.5rem; }
 /* ── Season list ───────────────────────────────────────────────────────── */
 
 .event-list {
+  /* ONE grid for the whole list. A grid per row would size each date column
+     independently, so every title would start at a different x position. */
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 2rem;
   list-style: none;
   margin: 2.25rem 0 0;
   padding: 0;
@@ -480,31 +485,45 @@ section[id] { scroll-margin-top: 5.5rem; }
 }
 
 .event {
+  /* Spans both parent tracks and subgrids them, so every row shares a single
+     date column: sized to the widest date in the whole list. Nothing wraps and
+     there is no hard-coded width to outgrow. */
   display: grid;
-  /* The date column sizes itself to its widest date, so dates never wrap and
-     there is no hard-coded width to outgrow. `minmax(0, 1fr)` lets the title
-     column absorb the remainder and shrink instead of overflowing. */
-  grid-template-columns: max-content minmax(0, 1fr);
-  gap: 0.3rem 2rem;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+  column-gap: 2rem;
+  row-gap: 0.3rem;
   padding: 1.5rem 0 1.6rem;
   border-bottom: 1px solid var(--rule);
 }
 
+/* Without subgrid, `grid-column: 2` would spawn an implicit track and overflow,
+   so browsers that lack it just stack each event instead. */
+@supports not (grid-template-columns: subgrid) {
+  .event { display: block; }
+}
+
+/* No horizontal padding here: it would offset this row's subgrid tracks and
+   push its date and title out of line with every other row. */
 .event.is-next {
   background-color: rgba(255, 178, 14, 0.09);
-  box-shadow: inset 2px 0 0 var(--gold);
-  padding-inline: 1rem;
-  margin-inline: -1rem;
 }
 
 .event-date {
   grid-column: 1;
   grid-row: 1 / span 2;
+  /* A reserved gutter, so a marker can sit at the row's left edge without
+     crowding the date. Applied to EVERY row, so the dates stay aligned with
+     each other (padding on one row only would indent that date alone). */
+  padding-left: 1.1rem;
   margin: 0;
   font-style: italic;
   font-size: 1.1rem;
   color: var(--crimson);
 }
+
+/* Marker for the next event, sitting in that gutter level with the row edge. */
+.event.is-next .event-date { border-left: 3px solid var(--gold); }
 
 .event-title { grid-column: 2; }
 .event-title em { font-style: italic; }
@@ -617,13 +636,9 @@ section[id] { scroll-margin-top: 5.5rem; }
   .programme-grid { grid-template-columns: 1fr; }
   .programme-who { text-align: left; }
 
-  .event {
-    grid-template-columns: 1fr;
-    gap: 0.2rem;
-  }
-  .event-date,
-  .event-title,
-  .event-desc { grid-column: 1; grid-row: auto; }
+  /* One column: drop the grids so date, title and description simply stack. */
+  .event-list { grid-template-columns: 1fr; }
+  .event { display: block; }
   .event-date { margin-bottom: 0.35rem; }
 }
 

@@ -158,7 +158,9 @@
           <h2>The season</h2>
           <p class="section-note">All at The Barn, Causeway, Horsham from 6.00pm.</p>
 
-          <ol class="event-list">
+          <!-- role="list" keeps list semantics in Safari, which drops them when
+               list-style: none is applied. -->
+          <ol class="event-list" role="list">
             <li class="event is-next">
               <p class="event-date">
                 <time datetime="2026-10-25">Sunday 25 October 2026</time
