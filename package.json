@@ -1,0 +1,17 @@
+{
+  "name": "talkestra",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A minimal single-page website template with a tiny TypeScript dev server.",
+  "scripts": {
+    "dev": "tsx server.ts",
+    "start": "tsx server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

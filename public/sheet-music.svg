@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640" fill="none" role="presentation">
+  <!--
+    Manuscript-paper texture: a repeating tile of staves and notes.
+    Drawn at full-strength maroon; the page applies it at very low opacity
+    (see the texture-opacity variable in styles.css).
+  -->
+  <defs>
+    <g id="staff" stroke="#d8004b" stroke-width="1">
+      <line x1="0" y1="0" x2="640" y2="0"/>
+      <line x1="0" y1="7" x2="640" y2="7"/>
+      <line x1="0" y1="14" x2="640" y2="14"/>
+      <line x1="0" y1="21" x2="640" y2="21"/>
+      <line x1="0" y1="28" x2="640" y2="28"/>
+    </g>
+
+    <!-- quarter note -->
+    <g id="qn">
+      <ellipse cx="0" cy="0" rx="5" ry="3.5" transform="rotate(-20)"/>
+      <rect x="4.2" y="-30" width="1.5" height="30"/>
+    </g>
+
+    <!-- half note (hollow head) -->
+    <g id="hn">
+      <ellipse cx="0" cy="0" rx="5" ry="3.5" transform="rotate(-20)" fill="none" stroke="#d8004b" stroke-width="1.4"/>
+      <rect x="4.2" y="-30" width="1.5" height="30"/>
+    </g>
+
+    <!-- eighth note -->
+    <g id="en">
+      <ellipse cx="0" cy="0" rx="5" ry="3.5" transform="rotate(-20)"/>
+      <rect x="4.2" y="-30" width="1.5" height="30"/>
+      <path d="M5.7 -30c7.5 4 7.5 11 1.5 16.5 3.5-7 2-11.5-1.5-14.5z"/>
+    </g>
+
+    <g id="bar" stroke="#d8004b" stroke-width="1.4">
+      <line x1="0" y1="0" x2="0" y2="28"/>
+    </g>
+  </defs>
+
+  <g fill="#d8004b">
+    <!-- staff 1 -->
+    <use href="#staff" y="64"/>
+    <use href="#qn" x="72" y="78"/>
+    <use href="#qn" x="112" y="71"/>
+    <use href="#en" x="152" y="85"/>
+    <use href="#hn" x="252" y="78"/>
+    <use href="#bar" x="336" y="64"/>
+    <use href="#qn" x="396" y="71"/>
+    <use href="#qn" x="436" y="78"/>
+    <use href="#en" x="476" y="64"/>
+    <use href="#en" x="516" y="78"/>
+    <use href="#hn" x="604" y="71"/>
+
+    <!-- staff 2 -->
+    <use href="#staff" y="232"/>
+    <use href="#hn" x="40" y="246"/>
+    <use href="#qn" x="128" y="253"/>
+    <use href="#en" x="168" y="239"/>
+    <use href="#qn" x="208" y="246"/>
+    <use href="#bar" x="288" y="232"/>
+    <use href="#qn" x="352" y="253"/>
+    <use href="#hn" x="392" y="246"/>
+    <use href="#en" x="472" y="239"/>
+    <use href="#qn" x="512" y="253"/>
+    <use href="#qn" x="552" y="246"/>
+    <use href="#en" x="600" y="260"/>
+
+    <!-- staff 3 -->
+    <use href="#staff" y="400"/>
+    <use href="#en" x="88" y="414"/>
+    <use href="#qn" x="128" y="407"/>
+    <use href="#qn" x="168" y="421"/>
+    <use href="#hn" x="248" y="414"/>
+    <use href="#bar" x="368" y="400"/>
+    <use href="#qn" x="424" y="407"/>
+    <use href="#en" x="464" y="421"/>
+    <use href="#qn" x="504" y="414"/>
+    <use href="#hn" x="592" y="407"/>
+
+    <!-- staff 4 -->
+    <use href="#staff" y="568"/>
+    <use href="#qn" x="56" y="582"/>
+    <use href="#en" x="96" y="575"/>
+    <use href="#hn" x="176" y="589"/>
+    <use href="#qn" x="264" y="582"/>
+    <use href="#bar" x="328" y="568"/>
+    <use href="#qn" x="384" y="575"/>
+    <use href="#en" x="424" y="589"/>
+    <use href="#qn" x="464" y="582"/>
+    <use href="#en" x="544" y="575"/>
+    <use href="#qn" x="584" y="589"/>
+  </g>
+</svg>

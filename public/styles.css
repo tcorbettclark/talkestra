@@ -1,0 +1,642 @@
+/* ==========================================================================
+   Talkestra — www.talkestra.com
+   --------------------------------------------------------------------------
+   Palette taken from the digital logo artwork (4 flat colours):
+     crimson #d8004b · gold #ffb20e · cream #ffe8b6 · white #ffffff
+   Type: Lovelo (display) + Noto Serif (prose).
+
+   Two tokens are deliberately NOT the literal brand values, because the
+   brand's own pairings fail WCAG AA. Each is a one-line swap:
+     --crimson-on-gold  #8f0030  (brand crimson on gold = 2.89:1, fails)
+     --cream-text       #fff6e2  (brand cream on crimson = 4.34:1, marginal)
+   ========================================================================== */
+
+:root {
+  /* Brand palette */
+  --crimson:         #d8004b;
+  --crimson-deep:    #a8003a;
+  --crimson-on-gold: #8f0030;   /* deepened for legibility on gold — 5.26:1 */
+  --gold:            #ffb20e;
+  --gold-bronze:     #8a5a0c;   /* eyebrow text on cream — 5.69:1 */
+  --cream:           #ffe8b6;   /* brand cream, for graphics */
+  --cream-text:      #fff6e2;   /* cream for text on crimson — 4.86:1 */
+
+  --page:     #fffaf1;
+  --card:     #fffdf9;
+  --ink:      #2f2118;
+  --ink-soft: #6b5647;
+  --rule:     rgba(216, 0, 75, 0.22);
+  --shadow:   0 1px 0 rgba(47, 33, 24, 0.03), 0 18px 40px -24px rgba(47, 33, 24, 0.45);
+
+  /* Type — Lovelo is not on Google Fonts; see the @font-face note below.
+     Jost is the stand-in until the Lovelo files are dropped in. */
+  --font-display: "Lovelo", "Jost", "Futura", "Avenir Next", "Century Gothic", system-ui, sans-serif;
+  --font-serif:   "Noto Serif", Georgia, "Times New Roman", serif;
+
+  /* Layout */
+  --maxw: 70rem;
+  --measure: 38rem;
+  --texture-size: 640px;
+  --texture-opacity: 0.05;
+}
+
+/* --------------------------------------------------------------------------
+   Self-hosted Lovelo.
+   Drop the font files into public/fonts/ and uncomment. Until then the
+   display stack silently falls back to Jost.
+   --------------------------------------------------------------------------
+@font-face {
+  font-family: "Lovelo";
+  src: url("/fonts/Lovelo-Black.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lovelo";
+  src: url("/fonts/Lovelo-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+-------------------------------------------------------------------------- */
+
+/* ── Reset ─────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.06rem;
+  line-height: 1.65;
+  color: var(--ink);
+  background-color: var(--page);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Manuscript-paper texture, fixed behind the whole page. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/sheet-music.svg");
+  background-size: var(--texture-size) var(--texture-size);
+  opacity: var(--texture-opacity);
+}
+
+.masthead,
+main,
+.site-footer { position: relative; z-index: 1; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+a { color: var(--crimson); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--crimson-deep); }
+
+:focus-visible {
+  outline: 2px solid var(--crimson);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--crimson);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+h2 { font-size: clamp(1.35rem, 3vw, 1.95rem); margin: 0 0 1rem; }
+h3 { font-size: 1.05rem; margin: 0; }
+
+section[id] { scroll-margin-top: 5.5rem; }
+
+/* ── Utilities ─────────────────────────────────────────────────────────── */
+
+.container {
+  width: min(100% - 2.5rem, var(--maxw));
+  margin-inline: auto;
+}
+
+.container.narrow { width: min(100% - 2.5rem, var(--measure)); }
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--crimson);
+  color: var(--cream-text);
+  padding: 0.6rem 1rem;
+}
+.skip-link:focus { left: 0.5rem; top: 0.5rem; }
+
+.section { padding: clamp(2.75rem, 6vw, 4.5rem) 0; }
+
+.section-alt { background-color: rgba(255, 232, 182, 0.38); }
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-bronze);
+}
+
+.section-note {
+  margin: -0.5rem 0 0;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.badge {
+  /* Must be a block, not inline: the season list sizes its date column with
+     `max-content`, and inline content would add the badge's width to the date
+     instead of sitting under it. Block children contribute the max, not the sum. */
+  display: block;
+  width: fit-content;
+  margin: 0.5rem 0 0;
+  background: var(--gold);
+  color: var(--crimson-on-gold);
+  font-family: var(--font-display);
+  font-style: normal;   /* don't inherit italic from .event-date */
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.28em 0.62em 0.32em;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+/* ── Masthead ──────────────────────────────────────────────────────────── */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background-color: rgba(255, 250, 241, 0.93);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.masthead-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.7rem;
+}
+
+.logo { display: block; line-height: 0; }
+.logo img {
+  display: block;
+  height: clamp(2.1rem, 4.6vw, 2.8rem);
+  width: auto;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.35rem;
+}
+
+.site-nav a {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.92rem;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.site-nav a:hover { color: var(--crimson); }
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  gap: 0.55rem;
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.45rem 0.7rem;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--crimson);
+  cursor: pointer;
+}
+
+.nav-toggle-icon,
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  display: block;
+  width: 1rem;
+  height: 1.5px;
+  background: var(--crimson);
+}
+.nav-toggle-icon { position: relative; }
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+.nav-toggle-icon::before { top: -5px; }
+.nav-toggle-icon::after { top: 5px; }
+
+/* ── Hero ──────────────────────────────────────────────────────────────── */
+
+.hero {
+  padding-block: clamp(2.75rem, 7vw, 5.5rem) clamp(1.5rem, 4vw, 2.5rem);
+  text-align: center;
+}
+
+.tagline {
+  display: inline-block;
+  margin: 0;
+  background: var(--gold);
+  color: var(--crimson-on-gold);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(0.74rem, 1.6vw, 0.86rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.5em 1.15em 0.55em;
+  border-radius: 2px;
+  transform: rotate(-1.2deg);
+}
+
+.hero h1 {
+  max-width: 17ch;
+  margin: 1.2rem auto 0.9rem;
+  font-size: clamp(1.85rem, 5.6vw, 3.5rem);
+  letter-spacing: 0.005em;
+}
+
+.hero .lede {
+  max-width: 42ch;
+  margin: 0 auto 1.9rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  letter-spacing: 0.05em;
+  padding: 0.72em 1.45em;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+
+.btn-primary {
+  background: var(--crimson);
+  color: var(--cream-text);
+}
+.btn-primary:hover { background: var(--crimson-deep); color: var(--cream-text); }
+
+.btn-outline {
+  border-color: var(--crimson);
+  color: var(--crimson);
+}
+.btn-outline:hover { background: var(--crimson); color: var(--cream-text); }
+
+.text-link {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* ── Next event / programme card ───────────────────────────────────────── */
+
+.programme {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.programme-band {
+  margin: 0;
+  background: var(--crimson);
+  color: var(--cream-text);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.72rem clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.programme-body { padding: clamp(1.5rem, 4vw, 2.75rem); }
+
+.programme-title {
+  max-width: 26ch;
+  margin: 0 auto 2.25rem;
+  text-align: center;
+  font-size: clamp(1.45rem, 4vw, 2.3rem);
+}
+
+.programme-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(1.25rem, 4vw, 2.75rem);
+  align-items: center;
+}
+
+.portrait { margin: 0; }
+
+.portrait img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  outline: 1px solid var(--rule);
+  outline-offset: 4px;
+}
+
+.programme-who {
+  font-style: italic;
+  font-size: clamp(1.02rem, 2.2vw, 1.22rem);
+  text-align: right;
+}
+
+.performer { margin: 0 0 1.4rem; }
+.performer:last-child { margin-bottom: 0; }
+
+.performer-lead {
+  display: block;
+  font-size: 0.92em;
+  color: var(--ink-soft);
+}
+
+.performer-name {
+  display: block;
+  font-size: 1.32em;
+  line-height: 1.3;
+}
+
+.programme-facts {
+  display: grid;
+  gap: 0.5rem;
+  margin: 2.25rem 0 0;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+
+.fact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35rem 0.8rem;
+}
+
+.fact dt {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-bronze);
+}
+
+.fact dd {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.programme-note {
+  margin: 1.1rem 0 0;
+  text-align: center;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* ── The series ────────────────────────────────────────────────────────── */
+
+.lead-serif {
+  font-size: clamp(1.15rem, 2.6vw, 1.45rem);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.lead-serif::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: normal;
+  color: var(--crimson);
+  font-size: 3.1em;
+  line-height: 0.82;
+  padding: 0.06em 0.1em 0 0;
+}
+
+/* ── Season list ───────────────────────────────────────────────────────── */
+
+.event-list {
+  list-style: none;
+  margin: 2.25rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.event {
+  display: grid;
+  /* The date column sizes itself to its widest date, so dates never wrap and
+     there is no hard-coded width to outgrow. `minmax(0, 1fr)` lets the title
+     column absorb the remainder and shrink instead of overflowing. */
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.3rem 2rem;
+  padding: 1.5rem 0 1.6rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.event.is-next {
+  background-color: rgba(255, 178, 14, 0.09);
+  box-shadow: inset 2px 0 0 var(--gold);
+  padding-inline: 1rem;
+  margin-inline: -1rem;
+}
+
+.event-date {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  margin: 0;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--crimson);
+}
+
+.event-title { grid-column: 2; }
+.event-title em { font-style: italic; }
+
+.event-desc {
+  grid-column: 2;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+}
+
+/* Past events are dimmed automatically by main.js. */
+.event.is-past { opacity: 0.55; }
+
+/* ── Visit ─────────────────────────────────────────────────────────────── */
+
+.visit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.visit-item {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--gold);
+  padding: 1.35rem 1.4rem 1.45rem;
+}
+
+.visit-item h3 {
+  margin-bottom: 0.6rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+}
+
+.visit-item p {
+  margin: 0 0 0.5rem;
+  font-size: 1.06rem;
+}
+.visit-item p:last-child { margin-bottom: 0; }
+
+/* ── Footer ────────────────────────────────────────────────────────────── */
+
+.site-footer {
+  background: var(--crimson);
+  color: var(--cream-text);
+  padding: 3rem 0 2.25rem;
+  text-align: center;
+}
+
+.footer-inner > * { margin: 0; }
+
+/* The logo's crimson panel is exactly the footer crimson, so it floats. */
+.footer-logo img {
+  height: clamp(2.5rem, 6vw, 3.4rem);
+  width: auto;
+  margin-inline: auto;
+}
+
+.footer-tagline {
+  margin-top: 1.1rem;
+  font-style: italic;
+  color: rgba(255, 246, 226, 0.85);
+}
+
+.footer-url { margin-top: 0.9rem; }
+
+.footer-url a {
+  color: var(--cream-text);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.footer-fine {
+  margin-top: 1.5rem;
+  font-size: 0.88rem;
+  color: rgba(255, 246, 226, 0.72);
+}
+
+/* ── Mobile ────────────────────────────────────────────────────────────── */
+
+@media (max-width: 44rem) {
+  .nav-toggle { display: inline-flex; }
+
+  .site-nav {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    background: var(--card);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: var(--shadow);
+  }
+
+  .site-nav.is-open { display: flex; }
+
+  .site-nav a {
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .site-nav a:last-child { border-bottom: 0; }
+
+  .programme-grid { grid-template-columns: 1fr; }
+  .programme-who { text-align: left; }
+
+  .event {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+  .event-date,
+  .event-title,
+  .event-desc { grid-column: 1; grid-row: auto; }
+  .event-date { margin-bottom: 0.35rem; }
+}
+
+/* ── Print ─────────────────────────────────────────────────────────────── */
+
+@media print {
+  body { background: #fff; color: #000; }
+  body::before { display: none; }
+  .masthead,
+  .site-footer,
+  .skip-link,
+  .hero-actions { display: none; }
+  .programme,
+  .visit-item { box-shadow: none; border-color: #999; }
+  a { color: #000; text-decoration: none; }
+}
