@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "tsx server.ts",
     "start": "tsx server.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "deploy": "COPYFILE_DISABLE=1 tar czf - -C public . | ssh talkestra@ssh61.interdns.co.uk 'tar xzf - -C /home/talkestra/public_html'"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
