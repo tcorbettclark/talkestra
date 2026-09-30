@@ -666,10 +666,16 @@ section[id] { scroll-margin-top: 5.5rem; }
   .programme-grid { grid-template-columns: 1fr; }
   .programme-who { text-align: left; }
 
-  /* One column: drop the grids so date, title and description simply stack. */
+  /* One column: drop the grids so date, title and description simply stack.
+     Strip the date's indent too — it was aligning rows in the two-column
+     grid, but in a single column it would push the date to the right of
+     every other line and break the visual alignment of the event block. */
   .event-list { grid-template-columns: 1fr; }
   .event { display: block; }
-  .event-date { margin-bottom: 0.35rem; }
+  .event-date {
+    padding-left: 0;
+    margin-bottom: 0.35rem;
+  }
 }
 
 /* ── Print ─────────────────────────────────────────────────────────────── */
