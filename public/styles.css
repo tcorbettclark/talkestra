@@ -398,7 +398,7 @@ section[id] { scroll-margin-top: 5.5rem; }
 
 .programme-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  grid-template-columns: minmax(0, 0.7fr) auto;
   gap: clamp(1.25rem, 4vw, 2.5rem);
   align-items: center;
 }
@@ -406,11 +406,21 @@ section[id] { scroll-margin-top: 5.5rem; }
 .programme-intro {
   margin: 0 auto 2.25rem;
   max-width: 38rem;
+  padding: 1.1rem 1.4rem 1.2rem 1.6rem;
   text-align: center;
-  font-size: 1.08rem;
-  line-height: 1.65;
+  font-size: 1.06rem;
+  line-height: 1.6;
+  font-style: italic;
+  /* Designed pull-quote card. No frosted glass: the parent .programme is
+     already cream, so blurring it produces nothing. Use a clear cream card
+     with a gold left bar and a thin crimson rule instead. */
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--gold);
+  border-radius: 2px;
+  box-shadow: 0 6px 18px -14px rgba(47, 33, 24, 0.4);
 }
-.programme-intro p { margin: 0 0 1rem; }
+.programme-intro p { margin: 0 0 0.9rem; }
 .programme-intro p:last-child { margin-bottom: 0; }
 
 .portrait { margin: 0; }
@@ -421,7 +431,10 @@ section[id] { scroll-margin-top: 5.5rem; }
   object-fit: cover;
   border: 1px solid var(--rule);
   outline: 1px solid var(--rule);
-  outline-offset: 4px;
+  outline-offset: 8px;
+  /* Subtle lift so the photo reads as a separate object, not flush with
+     the card surface. */
+  box-shadow: 0 6px 18px -10px rgba(47, 33, 24, 0.45);
 }
 
 .programme-who {
