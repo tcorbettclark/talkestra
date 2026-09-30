@@ -36,8 +36,6 @@
   /* Layout */
   --maxw: 70rem;
   --measure: 38rem;
-  --texture-size: 640px;
-  --texture-opacity: 0.05;
 }
 
 /* --------------------------------------------------------------------------
@@ -85,16 +83,27 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Manuscript-paper texture, fixed behind the whole page. */
-body::before {
+/* ── Score backgrounds ─────────────────────────────────────────────────── */
+
+/* Real manuscript pages replace the old drawn staff-paper texture. Each layer
+   is a ::before that multiply-blends into the cream page, so the scan's white
+   paper disappears and only ink remains — opacity sets ink strength directly.
+   `cover` fills the section and deliberately crops the page top and bottom;
+   --score-position chooses which band of the page shows. */
+.score-bg { position: relative; }
+
+.score-bg::before {
   content: "";
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
+  background-image: var(--score);
+  background-size: cover;
+  background-position: var(--score-position, center);
+  background-repeat: no-repeat;
+  mix-blend-mode: multiply;
+  opacity: var(--score-opacity, 0.5);
   pointer-events: none;
-  background-image: url("/sheet-music.svg");
-  background-size: var(--texture-size) var(--texture-size);
-  opacity: var(--texture-opacity);
 }
 
 .masthead,
@@ -267,6 +276,12 @@ section[id] { scroll-margin-top: 5.5rem; }
 /* ── Hero ──────────────────────────────────────────────────────────────── */
 
 .hero {
+  /* The next event's piece opens the page: the top of the manuscript, where
+     the title mark and the airy first system are. */
+  --score: url("/images/score-schoenberg-op19-no6.jpg");
+  --score-position: center 0%;
+  --score-opacity: 0.3;
+
   padding-block: clamp(2.75rem, 7vw, 5.5rem) clamp(1.5rem, 4vw, 2.5rem);
   text-align: center;
 }
@@ -346,8 +361,18 @@ section[id] { scroll-margin-top: 5.5rem; }
 
 /* ── Next event / programme card ───────────────────────────────────────── */
 
+#next {
+  /* The same manuscript, a different band: the densest middle systems.
+     Stronger than the hero, because the card keeps most text off the ink. */
+  --score: url("/images/score-schoenberg-op19-no6.jpg");
+  --score-position: center 100%;
+  --score-opacity: 0.5;
+}
+
 .programme {
-  background: var(--card);
+  /* Translucent, so the score reads faintly through the card the way a
+     printed programme cover would. */
+  background: rgba(255, 253, 249, 0.72);
   border: 1px solid var(--rule);
   box-shadow: var(--shadow);
   overflow: hidden;
@@ -471,6 +496,14 @@ section[id] { scroll-margin-top: 5.5rem; }
 }
 
 /* ── Season list ───────────────────────────────────────────────────────── */
+
+#season {
+  /* The season's emblem. Held at 16%: here the description text sits directly
+     on the page with no card to protect it, and 18%+ drops the worst-case
+     contrast of --ink-soft over a staff line below 4.5:1. */
+  --score: url("/images/score-stravinsky-rite.jpg");
+  --score-opacity: 0.16;
+}
 
 .event-list {
   /* ONE grid for the whole list. A grid per row would size each date column
@@ -633,6 +666,9 @@ section[id] { scroll-margin-top: 5.5rem; }
   }
   .site-nav a:last-child { border-bottom: 0; }
 
+  /* The scores are a sliver at this width and only add noise. */
+  .score-bg::before { display: none; }
+
   .programme-grid { grid-template-columns: 1fr; }
   .programme-who { text-align: left; }
 
@@ -646,7 +682,7 @@ section[id] { scroll-margin-top: 5.5rem; }
 
 @media print {
   body { background: #fff; color: #000; }
-  body::before { display: none; }
+  .score-bg::before { display: none; }
   .masthead,
   .site-footer,
   .skip-link,
