@@ -67,10 +67,17 @@ if (drawerNodes.length && triggers.length && backdrop) {
     lastTrigger = trigger;
     drawer.hidden = false;
     backdrop.hidden = false;
-    // Force a frame so the transition runs from the off-screen state.
+    // Two RAFs: the first paints the drawer in its initial off-screen
+    // position (display: flex, transform: translateX(100%)); the second
+    // adds .is-open so the browser can transition from that first paint to
+    // the open state. Without this, going from hidden → is-open in a single
+    // frame is treated as an instant state change and the slide animation
+    // is skipped on the first open.
     requestAnimationFrame(() => {
-      drawer.classList.add("is-open");
-      backdrop.classList.add("is-open");
+      requestAnimationFrame(() => {
+        drawer.classList.add("is-open");
+        backdrop.classList.add("is-open");
+      });
     });
     drawer.setAttribute("aria-hidden", "false");
     document.body.classList.add("drawer-open");
@@ -79,7 +86,7 @@ if (drawerNodes.length && triggers.length && backdrop) {
     if (heading) heading.setAttribute("tabindex", "-1");
     active = drawer;
     // Move focus to the heading after the panel has slid in.
-    setTimeout(() => heading && heading.focus(), 60);
+    setTimeout(() => heading && heading.focus(), 100);
   };
 
   const close = () => {
