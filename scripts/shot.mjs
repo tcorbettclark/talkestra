@@ -10,6 +10,7 @@
 //   npm run shot -- --out out/foo.png     -> where to write (default screenshots/shot.png)
 //   npm run shot -- --w 390 --h 844       -> mobile viewport
 //   npm run shot -- --dark                -> prefers-color-scheme: dark
+//   npm run shot -- --print               -> print stylesheet (no score ink, menus hidden)
 //
 // Env: BASE_URL (default http://localhost:5173), DPR (device scale factor)
 
@@ -17,7 +18,7 @@ import { chromium } from "playwright";
 import fs from "node:fs";
 import path from "node:path";
 
-const opts = { full: false, selector: null, w: 1280, h: 900, wait: 300, dark: false, out: null };
+const opts = { full: false, selector: null, w: 1280, h: 900, wait: 300, dark: false, out: null, print: false };
 const positional = [];
 
 const argv = process.argv.slice(2);
@@ -30,6 +31,7 @@ for (let i = 0; i < argv.length; i++) {
   };
   if (arg === "--full") opts.full = true;
   else if (arg === "--dark") opts.dark = true;
+  else if (arg === "--print") opts.print = true;
   else if (arg === "--selector") opts.selector = value();
   else if (arg === "--out") opts.out = value();
   else if (arg === "--w") opts.w = Number(value());
@@ -53,6 +55,7 @@ const context = await browser.newContext({
   colorScheme: opts.dark ? "dark" : "light",
 });
 const page = await context.newPage();
+if (opts.print) await page.emulateMedia({ media: "print" });
 
 const problems = new Set();
 page.on("console", (m) => m.type() === "error" && problems.add(`console: ${m.text()}`));
@@ -72,7 +75,7 @@ try {
   console.log(`${await page.title()} — ${url}`);
   console.log(
     `${opts.w}x${opts.h}${opts.full ? " full-page" : ""}${opts.selector ? ` ${opts.selector}` : ""}` +
-      `${opts.dark ? " dark" : ""} -> ${path.relative(process.cwd(), out)} (${kb} KB)`,
+      `${opts.dark ? " dark" : ""}${opts.print ? " print" : ""} -> ${path.relative(process.cwd(), out)} (${kb} KB)`,
   );
 } catch (err) {
   console.error(`failed: ${err.message.split("\n")[0]}`);
