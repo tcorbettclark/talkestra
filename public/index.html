@@ -104,11 +104,25 @@
                     <span class="performer-lead">led by</span>
                     <span class="performer-name">Steve Dummer</span>
                     — clarinet
+                    <button
+                      type="button"
+                      class="performer-more"
+                      data-drawer-open="performer-steve-dummer"
+                      aria-haspopup="dialog"
+                      aria-controls="performer-steve-dummer"
+                    >About Steve</button>
                   </p>
                   <p class="performer">
                     <span class="performer-lead">with</span>
                     <span class="performer-name">Andrew Zolinsky</span>
                     — piano
+                    <button
+                      type="button"
+                      class="performer-more"
+                      data-drawer-open="performer-andrew-zolinsky"
+                      aria-haspopup="dialog"
+                      aria-controls="performer-andrew-zolinsky"
+                    >About Andrew</button>
                   </p>
                 </div>
               </div>
@@ -238,9 +252,129 @@
           </div>
         </div>
       </section>
+
+
+
+
+
+    
     </main>
 
-    <footer class="site-footer">
+    <!-- ── Performer drawers ─────────────────────────────────────────── -->
+    <!-- One aside per performer. Hidden until opened (see .drawer CSS).
+         Each is a self-contained dialog with its own heading id for the
+         aria-labelledby reference on the dialog. Bio content lives in the
+         DOM (not a JSON island) so it's indexable and visible to readers
+         without JS. If we ever exceed ~5 performers, switch to a data
+         island + <template> + JS render.
+
+         Sits OUTSIDE <main> on purpose: <main> has position: relative;
+         z-index: 1, the masthead has z-index: 20. Anything inside <main>
+         is painted under the masthead regardless of its own z-index. So
+         drawer + backdrop live at body root to compete with the masthead
+         on equal terms. -->
+    <aside
+      id="performer-steve-dummer"
+      class="drawer"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="performer-steve-dummer-title"
+      aria-hidden="true"
+      hidden
+    >
+      <div class="drawer-head">
+        <p class="eyebrow">Performer</p>
+        <h2 id="performer-steve-dummer-title" class="drawer-title">
+          Steve Dummer
+        </h2>
+        <p class="drawer-role">Clarinet · conductor · educator</p>
+        <button
+          type="button"
+          class="drawer-close"
+          data-drawer-close
+          aria-label="Close"
+        >×</button>
+      </div>
+      <div class="drawer-body">
+        <figure class="drawer-portrait">
+          <img
+            src="/images/performers/steve-bio-800.webp"
+            alt="Steve Dummer holding a clarinet"
+            width="800"
+            height="533"
+            loading="lazy"
+          />
+        </figure>
+        <div class="drawer-bio">
+          <p>
+            Steve Dummer is a conductor, clarinetist, educator and all-round
+            enthusiast for participation in music making at every level.
+          </p>
+          <p>
+            As a clarinetist, he gives regular recitals and concerts
+            throughout the UK and abroad and records for television and film
+            including recent work at Chichester Festival Theatre and with the
+            Bournemouth Symphony Orchestra. He has given world premieres of
+            music written for him by many composers including Peter Copley,
+            Paul Carr, Barry Mills and Patrick Harrex and first British
+            performances of music by Gerald Busby, Matthew Hindson, Derek
+            Bermel, Frederick Rzewski and Paul Lewis. His recently recorded CD
+            of the complete clarinet music by John Hawkins, including the
+            Clarinet Concerto with Stane Street Sinfonietta and conductor
+            Holly Mathieson and the Clarinet Sonata with Yoko Ono, was given
+            a five-star review by MusicWeb International.
+          </p>
+          <p>
+            He is musical director of Kidenza, a critically acclaimed
+            professional orchestra giving concerts for children around the UK,
+            founder and director of Stane Street Sinfonietta, a professional
+            orchestra for players living in Southeast England, director of
+            Talkestra, which tries to reach new audiences for concert music,
+            conductor of the Horsham Symphony Orchestra, which, under Steve’s
+            directorship, has become “one of the best community orchestras in
+            the UK”, conductor of the Ensemble Reza Community Orchestra, a
+            course tutor and conductor at the Music Summer School and Festival
+            and Gresham School, director of the Wind Orchestra course of the
+            European Youth Summer Music and was a regular tutor and conductor
+            at Dartington International Summer School.
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <aside
+      id="performer-andrew-zolinsky"
+      class="drawer"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="performer-andrew-zolinsky-title"
+      aria-hidden="true"
+      hidden
+    >
+      <div class="drawer-head">
+        <p class="eyebrow">Performer</p>
+        <h2 id="performer-andrew-zolinsky-title" class="drawer-title">
+          Andrew Zolinsky
+        </h2>
+        <p class="drawer-role">Piano</p>
+        <button
+          type="button"
+          class="drawer-close"
+          data-drawer-close
+          aria-label="Close"
+        >×</button>
+      </div>
+      <div class="drawer-body">
+        <div class="drawer-bio">
+          <p class="drawer-placeholder">
+            Full biography to follow. Andrew Zolinsky is performing at the
+            next event.
+          </p>
+        </div>
+      </div>
+    </aside>
+    <div class="drawer-backdrop" data-drawer-backdrop hidden></div>
+<footer class="site-footer">
       <div class="container footer-inner">
         <p class="footer-logo">
           <img src="/images/talkestra-logo.png" alt="" width="900" height="349" />

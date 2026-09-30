@@ -10,11 +10,13 @@
     "typecheck": "tsc --noEmit",
     "shot": "node scripts/shot.mjs",
     "measure": "node scripts/measure-events.mjs",
+    "process-images": "node scripts/process-performer-images.mjs",
     "deploy": "COPYFILE_DISABLE=1 tar czf - -C public . | ssh talkestra@ssh61.interdns.co.uk 'tar xzf - -C /home/talkestra/public_html'"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
     "playwright": "^1.63.0",
+    "sharp": "^0.35.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
