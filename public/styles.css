@@ -542,18 +542,15 @@ section[id] { scroll-margin-top: 5.5rem; }
 .event-date {
   grid-column: 1;
   grid-row: 1 / span 2;
-  /* A reserved gutter, so a marker can sit at the row's left edge without
-     crowding the date. Applied to EVERY row, so the dates stay aligned with
-     each other (padding on one row only would indent that date alone). */
+  /* A uniform left indent for the whole list — applied to EVERY row so the
+     dates stay aligned with each other (padding on one row only would indent
+     that date alone). */
   padding-left: 1.1rem;
   margin: 0;
   font-style: italic;
   font-size: 1.1rem;
   color: var(--crimson);
 }
-
-/* Marker for the next event, sitting in that gutter level with the row edge. */
-.event.is-next .event-date { border-left: 3px solid var(--gold); }
 
 .event-title { grid-column: 2; }
 .event-title em { font-style: italic; }
