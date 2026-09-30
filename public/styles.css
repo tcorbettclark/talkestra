@@ -770,6 +770,13 @@ body.drawer-open { overflow: hidden; }
   display: block;
   border: 1px solid var(--rule);
 }
+.drawer-portrait figcaption.drawer-credit {
+  margin: 0.5rem 0 0;
+  font-style: italic;
+  font-size: 0.78rem;
+  color: rgba(107, 86, 71, 0.7);
+  text-align: center;
+}
 
 .drawer-bio p {
   margin: 0 0 1rem;
