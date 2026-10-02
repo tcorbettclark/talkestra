@@ -34,6 +34,16 @@
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
+    <!-- SVG sprite: icon definitions live here once and are referenced via
+         <use href="#icon-name"/> elsewhere in the document. The svg has no
+         width/height and sits offscreen, so it never renders itself but its
+         symbols remain addressable. Add new icons here as the site grows. -->
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+      <symbol id="icon-close" viewBox="0 0 20 20">
+        <path d="M4.5 4.5l11 11M15.5 4.5l-11 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </symbol>
+    </svg>
+
     <header class="masthead" id="top">
       <div class="container masthead-inner">
         <a class="logo" href="#top" aria-label="Talkestra — home">
@@ -312,7 +322,7 @@
           class="drawer-close"
           data-drawer-close
           aria-label="Close"
-        ><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 4.5l11 11M15.5 4.5l-11 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        ><svg class="drawer-close-icon" aria-hidden="true" focusable="false"><use href="#icon-close"/></svg></button>
       </div>
       <div class="drawer-body">
         <figure class="drawer-portrait">
@@ -381,7 +391,7 @@
           class="drawer-close"
           data-drawer-close
           aria-label="Close"
-        >×</button>
+        ><svg class="drawer-close-icon" aria-hidden="true" focusable="false"><use href="#icon-close"/></svg></button>
       </div>
       <div class="drawer-body">
         <figure class="drawer-portrait">
