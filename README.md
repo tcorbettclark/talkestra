@@ -10,12 +10,12 @@ exploring modern music at The Barn, Causeway, Horsham.
 ├── public/                 # ← this folder is the whole website
 │   ├── index.html          # all page content
 │   ├── styles.css          # design system + layout
-│   ├── main.js             # small enhancements (nav, footer year, past events)
-│   ├── sheet-music.svg     # manuscript-paper texture
+│   ├── main.js             # small enhancements (nav, footer year, next event)
 │   ├── favicon.svg
 │   └── images/
 │       ├── talkestra-logo.png   # brand mark, posterised to the brand colours
-│       └── schoenberg.jpg       # portrait for the featured event
+│       ├── modernist-melting-pot.jpg # artwork for the featured event
+│       └── score-*.jpg          # manuscript backgrounds
 ├── orig/                   # source artwork & flyer photographs (not published)
 ├── server.ts               # local dev server
 ├── tsconfig.json
@@ -85,17 +85,36 @@ To self-host Lovelo:
 ## Editing the site
 
 - **Events** are `<li class="event">` items in `index.html`. Each has a
-  `<time datetime="YYYY-MM-DD">`; `main.js` automatically dims events whose date
-  has passed, and the next event carries a `.badge`.
-- **The featured event** is the `.programme` card and is currently hard-coded to
-  25 October — it needs updating by hand as the season progresses.
-- **To swap the portrait**, replace `public/images/schoenberg.jpg` (portrait
-  images are cropped to 4:5 by CSS).
+  `<time datetime="YYYY-MM-DD">`. `main.js` dims events whose date has passed,
+  promotes the first upcoming event with the `.badge`, and keeps the hero's
+  "Next event — …" button in sync. The static markup already marks the current
+  next event, so the page is correct without JavaScript.
+- **The featured event** is the `.programme` card. Its title, subtitle, copy,
+  artwork, performers and facts are still edited by hand. When the next event
+  changes, update the card and the matching `<li>` in the season list together.
+- **Featured artwork** lives in `public/images/`; the card crops portraits and
+  artwork to 4:5 with CSS (`object-fit: cover`).
+- **Poster sources** can go in `orig/` (gitignored). To pull text and artwork
+  out of a PDF:
+
+  ```bash
+  pdftotext -layout 'orig/Dec 13th.pdf' -
+  pdftoppm -png -r 150 'orig/Dec 13th.pdf' /tmp/poster/page
+  pdfimages -png -p 'orig/Dec 13th.pdf' /tmp/poster/img
+  ```
+
+  The last two commands come from `poppler-utils`.
 
 ## Notes
 
-- `orig/` holds the source artwork and the flyer photographs. It is kept for
-  reference and should **not** be uploaded.
-- The Schoenberg portrait carries a stamped photographer credit (reading
-  approximately *Edwin E. Hufsheng*). Confirm the rights and any credit line
-  before the site goes public.
+- `orig/` holds the source artwork, event posters and flyer photographs. It is
+  kept for reference and should **not** be uploaded.
+- The October event's portrait and score are no longer used by the page; their
+  sources remain in `orig/`. The Schoenberg portrait carries a stamped
+  photographer credit (reading approximately *Edwin E. Hufsheng*). Confirm the
+  rights and any credit line before republishing it.
+- The December artwork came from the poster. The poster carries no credit, so
+  confirm the rights to reuse it outside the poster before publishing.
+- Laurence Cuttriss has no performer drawer yet. Add a bio and photo to
+  `orig/performers/`, run `npm run process-images`, then add an “About
+  Laurence” trigger when they are available.

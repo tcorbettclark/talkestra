@@ -38,7 +38,38 @@ for (const time of document.querySelectorAll("time[datetime]")) {
   }
 }
 
-console.info("Talkestra — we're talking great music.");
+// ── Promote the next event ───────────────────────────────────────────────
+// The markup already marks the next event for no-JS visitors. This keeps the
+// badge and hero button correct when a date passes without a manual edit.
+const events = Array.from(document.querySelectorAll(".event"));
+const nextEvent = events.find((event) => !event.classList.contains("is-past"));
+
+if (nextEvent) {
+  events.forEach((event) => event.classList.remove("is-next"));
+  nextEvent.classList.add("is-next");
+
+  const dateEl = nextEvent.querySelector(".event-date");
+  if (dateEl) {
+    const badges = Array.from(document.querySelectorAll(".event .badge"));
+    const badge = badges.shift() ?? document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = "Next event";
+    for (const extra of badges) extra.remove();
+    dateEl.append(badge);
+  }
+
+  const nextTime = nextEvent.querySelector("time[datetime]");
+  const heroLabel = document.querySelector("[data-next-label]");
+  if (nextTime && heroLabel) {
+    const when = new Date(`${nextTime.getAttribute("datetime")}T12:00:00`);
+    if (!Number.isNaN(when.valueOf())) {
+      heroLabel.textContent = `Next event — ${when.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+      })}`;
+    }
+  }
+}
 
 // ── Performer drawers ───────────────────────────────────────────────
 // One slide-in dialog per performer. Each drawer is a <aside role="dialog">

@@ -357,19 +357,10 @@ section[id] { scroll-margin-top: 5.5rem; }
 /* ── Next event / programme card ───────────────────────────────────────── */
 
 .programme {
-  /* The manuscript is confined to the card; it must not spill onto the page
-     around it. 90% of the card's width sets the notation a little smaller than
-     a straight cover while still showing ~70% of the page. The scan's paper is
-     pure white right to its edges, so multiply makes the narrower image
-     indistinguishable from a full-width one — only the music moves. */
-  --score: url("/images/score-schoenberg-op19-no6.jpg");
-  --score-size: 90% auto;
-  --score-position: center 100%;
-  --score-opacity: 0.5;
-
-  /* Translucent, so the ink layer behind it reads through the way a printed
-     programme cover would. */
-  background: rgba(255, 253, 249, 0.72);
+  /* Translucent, so the page's cream shows through the way a printed
+     programme cover would. The featured artwork supplies the visual anchor;
+     the manuscript texture is reserved for the season section below. */
+  background: rgba(255, 253, 249, 0.78);
   border: 1px solid var(--rule);
   box-shadow: var(--shadow);
   overflow: hidden;
@@ -391,9 +382,20 @@ section[id] { scroll-margin-top: 5.5rem; }
 
 .programme-title {
   max-width: 26ch;
-  margin: 0 auto 1.4rem;
+  margin: 0 auto 0.35rem;
   text-align: center;
   font-size: clamp(1.45rem, 4vw, 2.3rem);
+}
+
+.programme-subtitle {
+  margin: 0 auto 1.4rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-bronze);
 }
 
 .programme-grid {
@@ -887,7 +889,8 @@ body.drawer-open { overflow: hidden; }
   .masthead,
   .site-footer,
   .skip-link,
-  .hero-actions { display: none; }
+  .hero-actions,
+  .performer-more { display: none; }
   .programme,
   .visit-item { box-shadow: none; border-color: #999; }
   a { color: #000; text-decoration: none; }

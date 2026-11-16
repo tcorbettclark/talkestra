@@ -82,7 +82,7 @@
           <h1>Talkestra's Modern Music Symposium</h1>
           <p class="lede">A new series of events exploring the world of modern music.</p>
           <p class="hero-actions">
-            <a class="btn btn-primary" href="#next">Next event — 25 October</a>
+            <a class="btn btn-primary" href="#next" data-next-label>Next event — 13 December</a>
             <a class="btn btn-outline" href="#season">See the season</a>
           </p>
         </div>
@@ -91,37 +91,33 @@
       <!-- ── Next event ───────────────────────────────────────────────── -->
       <section id="next" class="section">
         <div class="container">
-          <article class="programme score-bg">
-            <p class="programme-band">Next event · Sunday 25 October 2026</p>
+          <article class="programme">
+            <p class="programme-band">Next event · Sunday 13 December 2026</p>
 
             <div class="programme-body">
-              <h2 class="programme-title">
-                Schoenberg, Berg, Atonality, and Getting Comfortable with Dissonance
-              </h2>
+              <h2 class="programme-title">The Modernist Melting Pot</h2>
+              <p class="programme-subtitle">Paris 1914–30</p>
 
               <div class="programme-intro">
                 <p>
-                  The music of Schoenberg can be intimidating and difficult to
-                  understand, but with a better awareness of his musical
-                  language and where it came from it can be incredibly
-                  rewarding to listen to.
+                  An exploration of music composed in Paris influenced by
+                  jazz, Cubism and the everyday by Satie, Stravinsky,
+                  Poulenc, Milhaud, Antheil and Copland.
                 </p>
                 <p>
-                  Using two of Schoenberg’s sets of piano pieces – op.11 and
-                  op.19 – plus the Four Pieces for Clarinet and Piano by Berg,
-                  we’ll explore why atonality was the logical next step in the
-                  development of music and how it produced some of the most
-                  expressive and profound music ever written.
+                  Grab some refreshments, listen to some great music and talk
+                  about what you’ve heard with the performers and other
+                  listeners.
                 </p>
               </div>
 
               <div class="programme-grid">
                 <figure class="portrait">
                   <img
-                    src="/images/schoenberg.jpg"
-                    alt="Arnold Schoenberg, photographed in later life"
-                    width="556"
-                    height="700"
+                    src="/images/modernist-melting-pot.jpg"
+                    alt="Colourful Cubist painting of the Eiffel Tower"
+                    width="663"
+                    height="1081"
                   />
                 </figure>
 
@@ -150,13 +146,19 @@
                       aria-controls="performer-andrew-zolinsky"
                     >About Andrew</button>
                   </p>
+                  <!-- No About button for Laurence until we have a bio and photo. -->
+                  <p class="performer">
+                    <span class="performer-lead">and</span>
+                    <span class="performer-name">Laurence Cuttriss</span>
+                    — clarinet
+                  </p>
                 </div>
               </div>
 
               <dl class="programme-facts">
                 <div class="fact">
                   <dt>When</dt>
-                  <dd><time datetime="2026-10-25">Sunday 25 October 2026</time>, 6.00pm</dd>
+                  <dd><time datetime="2026-12-13">Sunday 13 December 2026</time>, 6.00pm</dd>
                 </div>
                 <div class="fact">
                   <dt>Where</dt>
@@ -169,8 +171,7 @@
               </dl>
 
               <p class="programme-note">
-                Have a drink and a snack, ask questions and chat about what
-                you hear with the performers and other listeners.
+                A great way to get into something new!
               </p>
             </div>
           </article>
@@ -204,10 +205,9 @@
           <!-- role="list" keeps list semantics in Safari, which drops them when
                list-style: none is applied. -->
           <ol class="event-list" role="list">
-            <li class="event is-next">
+            <li class="event">
               <p class="event-date">
-                <time datetime="2026-10-25">Sunday 25 October 2026</time
-                ><span class="badge">Next event</span>
+                <time datetime="2026-10-25">Sunday 25 October 2026</time>
               </p>
               <h3 class="event-title">
                 Schoenberg, Berg, Atonality, and Getting Comfortable with Dissonance
@@ -217,12 +217,15 @@
               </p>
             </li>
 
-            <li class="event">
-              <p class="event-date"><time datetime="2026-12-13">Sunday 13 December 2026</time></p>
+            <li class="event is-next">
+              <p class="event-date">
+                <time datetime="2026-12-13">Sunday 13 December 2026</time
+                ><span class="badge">Next event</span>
+              </p>
               <h3 class="event-title">The Modernist Melting Pot</h3>
               <p class="event-desc">
-                Paris from 1911–1940, including music by Satie, Copland, Stravinsky and
-                Poulenc.
+                Paris 1914–30, with music by Satie, Stravinsky, Poulenc,
+                Milhaud, Antheil and Copland.
               </p>
             </li>
 
@@ -243,7 +246,8 @@
               <!-- Title is a working description; the flyer gives no name for this event. -->
               <h3 class="event-title">A Sense of Place</h3>
               <p class="event-desc">
-                Music by Francisco Coll, Anna Thorvaldsdottir and other composers.
+                Music by Francisco Coll, Anna Thorvaldsdottir and other composers
+                reflecting a sense of place.
               </p>
             </li>
           </ol>
