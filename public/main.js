@@ -85,6 +85,7 @@ const triggers = Array.from(
 if (drawerNodes.length && triggers.length && backdrop) {
   let active = null; // currently open drawer, or null
   let lastTrigger = null; // element to restore focus to on close
+  const closeTimers = new Map(); // drawer -> pending hide timer
 
   const focusableSelector =
     'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
@@ -92,6 +93,14 @@ if (drawerNodes.length && triggers.length && backdrop) {
   const open = (id, trigger) => {
     const drawer = document.getElementById(id);
     if (!drawer || drawer === active) return;
+
+    // A quick reopen during the slide-out should cancel the pending hide.
+    const pendingClose = closeTimers.get(drawer);
+    if (pendingClose !== undefined) {
+      clearTimeout(pendingClose);
+      closeTimers.delete(drawer);
+    }
+
     // Close any currently-open drawer first.
     if (active) close();
 
@@ -129,10 +138,15 @@ if (drawerNodes.length && triggers.length && backdrop) {
     const wasActive = active;
     active = null;
     // Wait for the slide-out, then hide. Matches the 0.28s transition.
-    setTimeout(() => {
+    const existingClose = closeTimers.get(wasActive);
+    if (existingClose !== undefined) clearTimeout(existingClose);
+    const closeTimer = window.setTimeout(() => {
       wasActive.hidden = true;
-      backdrop.hidden = true;
+      closeTimers.delete(wasActive);
+      // Keep the backdrop until every closing drawer has finished sliding.
+      if (!active && closeTimers.size === 0) backdrop.hidden = true;
     }, 300);
+    closeTimers.set(wasActive, closeTimer);
     if (lastTrigger && typeof lastTrigger.focus === "function") {
       lastTrigger.focus();
     }
@@ -156,10 +170,15 @@ if (drawerNodes.length && triggers.length && backdrop) {
     }
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
+    const current = document.activeElement;
+    if (!focusables.includes(current)) {
+      // Focus can sit on the heading (tabindex="-1") or outside the panel.
+      event.preventDefault();
+      (event.shiftKey ? last : first).focus();
+    } else if (event.shiftKey && current === first) {
       event.preventDefault();
       last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
+    } else if (!event.shiftKey && current === last) {
       event.preventDefault();
       first.focus();
     }
