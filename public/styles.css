@@ -18,6 +18,7 @@
   --crimson-on-gold: #8f0030;   /* deepened for legibility on gold — 5.26:1 */
   --gold:            #ffb20e;
   --gold-bronze:     #8a5a0c;   /* eyebrow text on cream — 5.69:1 */
+  --poster-teal:     #51747e;   /* sampled from the December poster */
   --cream:           #ffe8b6;   /* brand cream, for graphics */
   --cream-text:      #fff6e2;   /* cream for text on crimson — 4.86:1 */
 
@@ -31,6 +32,7 @@
   /* Type — Lovelo is not on Google Fonts; see the @font-face note below.
      Jost is the stand-in until the Lovelo files are dropped in. */
   --font-display: "Lovelo", "Jost", "Futura", "Avenir Next", "Century Gothic", system-ui, sans-serif;
+  --font-poster:  "Advent Pro", "Lovelo", "Jost", "Futura", "Avenir Next", "Century Gothic", system-ui, sans-serif;
   --font-serif:   "Noto Serif", Georgia, "Times New Roman", serif;
 
   /* Layout */
@@ -381,21 +383,26 @@ section[id] { scroll-margin-top: 5.5rem; }
 .programme-body { padding: clamp(1.5rem, 4vw, 2.75rem); }
 
 .programme-title {
-  max-width: 26ch;
+  max-width: 28ch;
   margin: 0 auto 0.35rem;
   text-align: center;
-  font-size: clamp(1.45rem, 4vw, 2.3rem);
+  font-family: var(--font-poster);
+  font-size: clamp(1.7rem, 4.8vw, 2.85rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.05;
+  color: var(--poster-teal);
 }
 
 .programme-subtitle {
   margin: 0 auto 1.4rem;
   text-align: center;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(0.95rem, 2.2vw, 1.2rem);
-  letter-spacing: 0.16em;
+  font-family: var(--font-poster);
+  font-weight: 500;
+  font-size: clamp(1rem, 2.4vw, 1.3rem);
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold-bronze);
+  color: var(--poster-teal);
 }
 
 .programme-grid {
