@@ -32,7 +32,23 @@
   /* Type — Lovelo is not on Google Fonts; see the @font-face note below.
      Jost is the stand-in until the Lovelo files are dropped in. */
   --font-display: "Lovelo", "Jost", "Futura", "Avenir Next", "Century Gothic", system-ui, sans-serif;
-  --font-poster:  "Advent Pro", "Lovelo", "Jost", "Futura", "Avenir Next", "Century Gothic", system-ui, sans-serif;
+  /* The poster's own display face is Donau Uppercase Neue (Renzler Design),
+     which is not on Google Fonts. Poiret One stands in for it: a Deco display
+     face with the period feel. It ships a single weight (400), so there is no
+     heavier cut to ask for — --font-poster-stroke thickens it instead. */
+  --font-poster:  "Poiret One", "Jost", "Futura", "Avenir Next", "Century Gothic", system-ui, sans-serif;
+  /* Weight knob for the display face, in em so it scales with the type.
+     Poiret One's stems are hairline; this strokes the outlines in the text
+     colour to add weight. The stroke is centred on the outline, so it grows
+     the stems without changing advance widths — nothing reflows or wraps.
+     0.025em is roughly +85% on a stem; 0.01em barely reads, 0.035em starts
+     to close up the counters in PARIS 1914-30. */
+  --font-poster-stroke: 0.025em;
+  /* Panel behind the poster headings, so the Picasso watermark does not read
+     through the lettering. Semi-transparent by design: the ink still shows,
+     just pushed back. Raise the alpha to quieten the drawing further, lower it
+     to let more through. */
+  --heading-veil: rgba(255, 253, 249, 0.82);
   --font-serif:   "Noto Serif", Georgia, "Times New Roman", serif;
 
   /* Layout */
@@ -366,7 +382,38 @@ section[id] { scroll-margin-top: 5.5rem; }
   border: 1px solid var(--rule);
   box-shadow: var(--shadow);
   overflow: hidden;
+  /* The watermark layer below is positioned against the card. */
+  position: relative;
 }
+
+/* Picasso's 1919 drawing of Stravinsky at the piano, as a watermark behind
+   the whole card. Same trick as the manuscript score above: the drawing is
+   black ink on white paper, so multiply blending makes the paper disappear
+   and leaves only the ink — --watermark-opacity sets its strength.
+   `cover` fills the card and crops the sheet a little at the sides.
+   Swap the image (and its two formats) when the featured event changes. */
+.programme::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url("/images/picasso-ragtime.jpg");
+  background-image: image-set(
+    url("/images/picasso-ragtime.webp") type("image/webp"),
+    url("/images/picasso-ragtime.jpg") type("image/jpeg")
+  );
+  background-size: var(--watermark-size, cover);
+  background-position: var(--watermark-position, center);
+  background-repeat: no-repeat;
+  mix-blend-mode: multiply;
+  opacity: var(--watermark-opacity, 0.12);
+  pointer-events: none;
+}
+
+/* The layer above is a positioned box, so without these it would paint over
+   the card's own text. The band and the body stay on top of the watermark. */
+.programme-band,
+.programme-body { position: relative; z-index: 1; }
 
 .programme-band {
   margin: 0;
@@ -383,37 +430,87 @@ section[id] { scroll-margin-top: 5.5rem; }
 .programme-body { padding: clamp(1.5rem, 4vw, 2.75rem); }
 
 .programme-title {
+  /* 28ch is inert with Poiret One — its figures are 0.856em, so 28ch is wider
+     than the card and the container does the wrapping. Harmless, and still
+     the guard if the face changes again. */
   max-width: 28ch;
   margin: 0 auto 0.35rem;
   text-align: center;
   font-family: var(--font-poster);
-  font-size: clamp(1.7rem, 4.8vw, 2.85rem);
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  line-height: 1.05;
+  /* Left at the size agreed for Oswald. Poiret One's capitals are 0.75em
+     against Oswald's 0.81em, so they set ~7% shorter at the same size; going
+     up to 4.63rem would restore them exactly but pushes the line past the
+     card and wraps it on ~1.05m-wide windows. */
+  font-size: clamp(2.55rem, 7.2vw, 4.28rem);
+  font-weight: 400; /* the only weight Poiret One has */
+  -webkit-text-stroke: var(--font-poster-stroke) currentColor;
+  /* No added tracking. Poiret One's sidebearings are already generous, and
+     Oswald's 0.04em was worth 68px here — enough to start wrapping the line
+     around 1050px viewport width. */
+  letter-spacing: normal;
+  line-height: 1.04;
   color: var(--poster-teal);
+  /* Shrink-wrapped so the panel hugs the lettering instead of running the
+     card's full width, and floated off the watermark ink. */
+  width: fit-content;
+  padding: 0.1em 0.45em 0.12em;
+  background: var(--heading-veil);
+  border-radius: 2px;
 }
 
 .programme-subtitle {
   margin: 0 auto 1.4rem;
   text-align: center;
   font-family: var(--font-poster);
-  font-weight: 500;
-  font-size: clamp(1rem, 2.4vw, 1.3rem);
-  letter-spacing: 0.2em;
+  /* 1.5x the pre-Oswald size, kept from the Oswald revision. The 0.12em
+     tracking stays: the poster tracks its subtitle out too, and at this
+     length there is room for it. */
+  font-size: clamp(1.5rem, 3.6vw, 1.95rem);
+  font-weight: 400;
+  -webkit-text-stroke: var(--font-poster-stroke) currentColor;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--poster-teal);
+  /* Same panel as the title. The right padding is 0.12em lighter because the
+     trailing letter-space after the last glyph already supplies it — without
+     that correction the panel looks lopsided. */
+  width: fit-content;
+  padding: 0.12em 0.73em 0.14em 0.85em;
+  background: var(--heading-veil);
+  border-radius: 2px;
 }
 
 .programme-grid {
+  /* Even halves. The artwork column was two thirds, which at the painting's own
+     ratio made a 660x1076 picture; a half-width column is 25% off that in both
+     dimensions. Raising the first `fr` enlarges the picture, lowering it
+     shrinks it. The `minmax` floor stops the billing column collapsing as the
+     type grows. */
   display: grid;
-  grid-template-columns: minmax(0, 0.7fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(11rem, 1fr);
+  grid-template-rows: auto auto;
   gap: clamp(1.25rem, 4vw, 2.5rem);
-  align-items: center;
+  /* `stretch`, not `center`. The picture spans both rows, so it now fills the
+     height the text column ends up taking and the two columns always finish
+     level — at any window width. See .portrait img. */
+  align-items: stretch;
 }
 
+/* The picture runs down the left of the whole detail block; the performer
+   billing and the banner stack beside it, banner second — the poster's
+   arrangement, and it fills the height the picture sets. */
+.portrait { grid-column: 1; grid-row: 1 / span 2; }
+.programme-who { grid-column: 2; grid-row: 1; }
+.programme-intro { grid-column: 2; grid-row: 2; }
+
 .programme-intro {
-  margin: 0 auto 2.25rem;
+  /* The picture spans both rows and is the taller column, so this row has more
+     height than the banner needs. `stretch` would hand that slack to the box
+     and show it as blank space under the text; anchor to the bottom instead, so
+     the box keeps its natural height and its top edge is pulled down. The bottom
+     margin keeps it off the picture's bottom edge. */
+  align-self: end;
+  margin: 0 0 1.25rem;
   max-width: 38rem;
   padding: 1.1rem 1.4rem 1.2rem 1.6rem;
   text-align: center;
@@ -435,8 +532,18 @@ section[id] { scroll-margin-top: 5.5rem; }
 .portrait { margin: 0; }
 
 .portrait img {
+  /* The artwork's own proportions (663x1081). This is a *floor*, not a cap:
+     while the picture column is the taller of the two, this height sets the
+     grid row and the whole painting shows, uncropped. Once the text beside it
+     wraps taller than that — narrow windows — the row is set by the text, and
+     `height: 100%` grows the picture to match, cropping the sides by `cover`
+     instead of leaving cream above and below it. The width/height attributes
+     on the <img> back this up if `aspect-ratio` is ignored while the height is
+     still indefinite. */
+  --portrait-ratio: 663 / 1081;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  height: 100%;
+  aspect-ratio: var(--portrait-ratio);
   object-fit: cover;
   border: 1px solid var(--rule);
   outline: 1px solid var(--rule);
@@ -448,7 +555,10 @@ section[id] { scroll-margin-top: 5.5rem; }
 
 .programme-who {
   font-style: italic;
-  font-size: clamp(1.02rem, 2.2vw, 1.22rem);
+  /* Bumped from clamp(1.02rem, 2.2vw, 1.22rem): the billing has to hold its own
+     beside a picture that now takes two thirds of the card, and the performer
+     names carry the information. */
+  font-size: clamp(1.1rem, 2.6vw, 1.5rem);
   text-align: right;
 }
 
@@ -873,7 +983,16 @@ body.drawer-open { overflow: hidden; }
   /* The scores are a sliver at this width and only add noise. */
   .score-bg::before { display: none; }
 
-  .programme-grid { grid-template-columns: 1fr; }
+  /* Same for the Picasso watermark: the card is far taller than the drawing
+     here, so `cover` would show a narrow slice of it — a few stray curves
+     rather than a picture. */
+  .programme::before { display: none; }
+
+  .programme-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+  /* Drop the two-row placement: one column, stacked in source order. */
+  .portrait,
+  .programme-who,
+  .programme-intro { grid-column: 1; grid-row: auto; }
   .programme-who { text-align: left; }
 
   /* One column: drop the grids so date, title and description simply stack.
@@ -893,6 +1012,7 @@ body.drawer-open { overflow: hidden; }
 @media print {
   body { background: #fff; color: #000; }
   .score-bg::before { display: none; }
+  .programme::before { display: none; }
   .masthead,
   .site-footer,
   .skip-link,

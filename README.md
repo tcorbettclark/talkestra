@@ -15,6 +15,7 @@ exploring modern music at The Barn, Causeway, Horsham.
 │   └── images/
 │       ├── talkestra-logo.png   # brand mark, posterised to the brand colours
 │       ├── modernist-melting-pot.jpg # artwork for the featured event
+│       ├── picasso-ragtime.jpg  # watermark behind the featured event card
 │       └── score-*.jpg          # manuscript backgrounds
 ├── orig/                   # source artwork & flyer photographs (not published)
 ├── server.ts               # local dev server
@@ -71,10 +72,35 @@ Swap either back in one line if brand fidelity is preferred over legibility.
 
 ## Fonts
 
-Display type is **Lovelo**, body text is **Noto Serif**.
+Display type is **Lovelo**, body text is **Noto Serif**. The featured event's
+card uses a third face, **Poiret One**, for its title and subtitle.
 
-Noto Serif (and Jost, the stand-in for Lovelo) load from Google Fonts. **Lovelo
-is not on Google Fonts**, so the display stack currently falls back to Jost.
+Noto Serif, Jost (the stand-in for Lovelo) and Poiret One load from Google
+Fonts. **Lovelo is not on Google Fonts**, so the display stack currently falls
+back to Jost.
+
+The poster for the December event sets its title and subtitle in *Donau
+Uppercase Neue* (Renzler Design, 2014 — lettering drawn from early 20th-century
+Viennese sources), which is not on Google Fonts either. **Poiret One** stands in
+for it: an Art Deco display face with the right period flavour. Two things
+follow from that choice, and both are noted in `styles.css`:
+
+- It ships **one weight only** (400), so weight is set with
+  `--font-poster-stroke` in `:root` — a `-webkit-text-stroke` on the glyph
+  outlines in the text colour. It adds stem thickness without changing advance
+  widths, so the title cannot reflow or wrap. Tune it there; `0.02em` is roughly
+  +70% on a stem, `0.035em` begins to close the counters of the subtitle.
+- Its capitals are 0.75em against Donau's and Oswald's ~0.81em, and its glyphs
+  are wider, so `.programme-title` keeps the size agreed for the previous face
+  and drops letter-spacing to `normal`. Going bigger to match cap height would
+  wrap the title below about 1050px viewport width.
+
+*Donau* itself is the faithful option: $9/style, $18 for the family at
+MyFonts, plus a separate **web font licence** (the desktop licence excludes
+websites). Drop the `.woff2` into `public/fonts/`, add an `@font-face` block
+alongside the Lovelo one, and lead `--font-poster` with it. Ignore the “free
+Donau” downloads on font-mirror sites — their internal names are the MyFonts
+webfont build, so they are unlicensed copies.
 
 To self-host Lovelo:
 
@@ -90,10 +116,54 @@ To self-host Lovelo:
   "Next event — …" button in sync. The static markup already marks the current
   next event, so the page is correct without JavaScript.
 - **The featured event** is the `.programme` card. Its title, subtitle, copy,
-  artwork, performers and facts are still edited by hand. When the next event
+  artwork, performers and facts are still edited by hand. Inside the card,
+  `.programme-grid` puts the artwork in the left column, with the performer
+  billing and then the banner (`.programme-intro`) stacked in the right one —
+  the poster's arrangement. Both carry explicit `grid-column`/`grid-row`, so
+  the mobile query resets them when the grid collapses to one column. When the next event
   changes, update the card and the matching `<li>` in the season list together.
-- **Featured artwork** lives in `public/images/`; the card crops portraits and
-  artwork to 4:5 with CSS (`object-fit: cover`).
+- **Featured artwork** lives in `public/images/`; the card sets its ratio with
+  `--portrait-ratio` on `.portrait img` (the painting's own `663 / 1081`
+  today) plus `height: 100%`, so the ratio is a floor rather than a cap: the
+  picture shows whole while it is the taller column, and grows — cropping at
+  the sides — when the text beside it wraps taller, keeping the two columns
+  level at every window width. The artwork column takes half the card's width
+  (`.programme-grid`), so raising that column's `fr` or the ratio both enlarge
+  the picture.
+- **The featured card's watermark** is a second image layer behind the whole
+  programme card: Picasso's 1919 drawing of Stravinsky at the piano. It is black ink on white paper, so it is `multiply`-blended — the
+  paper vanishes and only the ink shows through the card, like ink seen
+  through a printed programme cover. The image and its strength live in the
+  `.programme::before` rule in `styles.css`:
+
+  ```css
+  background-image: image-set(
+    url("/images/picasso-ragtime.webp") type("image/webp"),
+    url("/images/picasso-ragtime.jpg") type("image/jpeg")
+  );
+  opacity: var(--watermark-opacity, 0.12);
+  ```
+
+  `--watermark-size` and `--watermark-position` adjust how the sheet fills
+  the card. It is hidden below 44rem, where the card is much taller than the
+  drawing and `cover` would show only a sliver of it.
+
+  The card's title and subtitle carry their own semi-transparent panel
+  (`--heading-veil` in `:root`) so the ink does not read through the
+  lettering. The alpha is the knob: raise it to quieten the drawing further,
+  lower it to let more through.
+
+  To rebuild the asset from the scan in `orig/`, dropping the publisher's
+  imprint strip at the foot of the sheet (it is an advert for the drawing, and
+  it collided with the facts list):
+
+  ```bash
+  node -e "const s=require('sharp');s('orig/Picasso Ragtime.jpeg').rotate()
+    .extract({left:0,top:0,width:481,height:540})
+    .jpeg({quality:85,progressive:true,mozjpeg:true})
+    .toFile('public/images/picasso-ragtime.jpg')"
+  ```
+
 - **Poster sources** can go in `orig/` (gitignored). To pull text and artwork
   out of a PDF:
 
@@ -115,6 +185,11 @@ To self-host Lovelo:
   rights and any credit line before republishing it.
 - The December artwork came from the poster. The poster carries no credit, so
   confirm the rights to reuse it outside the poster before publishing.
+- The Picasso drawing behind the featured card is *Igor Stravinsky Ragtime*,
+  signed and dated 1919 and published by Éditions de la Sirène. It is a
+  drawing of Stravinsky, not a score by him — the title points at his ragtime
+  pieces. The scan in `orig/` carries no credit line, so the rights and any
+  required acknowledgement need confirming before publishing.
 - Laurence Cuttriss has no performer drawer yet. Add a bio and photo to
   `orig/performers/`, run `npm run process-images`, then add an “About
   Laurence” trigger when they are available.
