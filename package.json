@@ -11,7 +11,7 @@
     "shot": "node scripts/shot.mjs",
     "measure": "node scripts/measure-events.mjs",
     "process-images": "node scripts/process-performer-images.mjs",
-    "deploy": "COPYFILE_DISABLE=1 tar czf - -C public . | ssh talkestra@ssh61.interdns.co.uk 'tar xzf - -C /home/talkestra/public_html'"
+    "deploy": "node scripts/deploy.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

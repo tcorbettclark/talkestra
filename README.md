@@ -36,7 +36,8 @@ Then open <http://localhost:5173/>. Use `PORT=3000 npm run dev` for another port
 | ------------------- | ----------------------------------------- |
 | `npm run dev`       | Starts the dev server (via `tsx`).        |
 | `npm start`         | Alias for `npm run dev`.                  |
-| `npm run typecheck` | Type-checks `server.ts` without emitting. |
+| `npm run typecheck` | Type-checks `server.ts` without emitting.        |
+| `npm run deploy`    | Publishes `public/` with cache-busted URLs.   |
 
 ## Publishing
 
@@ -46,6 +47,51 @@ used in production.
 
 All asset paths are absolute (`/styles.css`, `/images/…`), so the site must live
 at the domain root, which it does.
+
+```bash
+npm run deploy              # typecheck, version asset URLs, upload
+node scripts/deploy.mjs --dry-run   # show the rewrites, upload nothing
+npm run deploy              # target: talkestra@ssh61.interdns.co.uk
+```
+
+### Caching
+
+The host returns `ETag` and `Last-Modified` but **no `Cache-Control`**, so
+browsers fall back to *heuristic* freshness — about 10% of a file's age. A
+stylesheet untouched for a week was therefore reused for ~18 hours without any
+revalidation, which is why a deploy could look like it had not happened.
+
+`scripts/deploy.mjs` fixes that by **versioning the URLs**. On a staged copy of
+`public/` it appends `?v=<hash>` to every site-absolute asset reference — in
+`index.html`, and to the image `url()`s in `styles.css`:
+
+```html
+<link rel="stylesheet" href="/styles.css?v=506851bc75" />
+<img src="/images/performers/laurence-bio-800.webp?v=073c60c05b" … />
+```
+
+The hash is the first 10 hex digits of the SHA-256 of the bytes actually served,
+so any change to a file produces a URL no cache has seen. `styles.css` is
+rewritten first and hashed afterwards, so the version matches what is uploaded.
+`public/` itself keeps clean paths for editing and local dev, and the deploy
+target is unchanged (`talkestra@ssh61.interdns.co.uk:/home/talkestra/public_html`).
+
+This deliberately needs **no server configuration** — no `.htaccess`, nothing
+that a host setting can break. The one file it cannot version is `index.html`
+itself, which must stay at `/`. Its heuristic freshness is only as long as its
+age, so HTML fetched minutes before a deploy is revalidated minutes after; the
+practical worst case is a visitor who loaded the page shortly before you
+published.
+
+If that ever becomes a real problem, the low-risk fix is a Cloudflare Cache Rule
+(no-store for `/` and `*.html`) rather than anything in the web root. Cloudflare
+currently answers `cf-cache-status: DYNAMIC`, i.e. it is not caching at the edge.
+
+Verify after a deploy:
+
+```bash
+curl -s https://www.talkestra.com/ | grep -o 'styles.css[^"]*'   # should show ?v=
+```
 
 ## Design system
 
