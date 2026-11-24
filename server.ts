@@ -30,7 +30,13 @@ const MIME: Record<string, string> = {
 };
 
 function send(res: http.ServerResponse, status: number, body: string | Buffer, contentType?: string) {
-  res.writeHead(status, { "Content-Type": contentType ?? "text/plain; charset=utf-8" });
+  const type = contentType ?? "text/plain; charset=utf-8";
+  const headers: Record<string, string> = { "Content-Type": type };
+  // This is the dev server: editing a page and then reloading should always show
+  // the edit. Browsers otherwise cache HTML heuristically and hand back a stale
+  // copy, which has already caused a phantom "broken icon" hunt.
+  if (type.startsWith("text/html")) headers["Cache-Control"] = "no-store";
+  res.writeHead(status, headers);
   res.end(body);
 }
 

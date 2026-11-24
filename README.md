@@ -190,6 +190,8 @@ To self-host Lovelo:
   drawing of Stravinsky, not a score by him — the title points at his ragtime
   pieces. The scan in `orig/` carries no credit line, so the rights and any
   required acknowledgement need confirming before publishing.
-- Laurence Cuttriss has no performer drawer yet. Add a bio and photo to
-  `orig/performers/`, run `npm run process-images`, then add an “About
-  Laurence” trigger when they are available.
+- Laurence Cuttriss’s drawer takes its text and photograph from his own site,
+  <https://laurence.cuttriss.co.uk> (source text and provenance noted in
+  `orig/performers/Laurence bio.md`; the photo is `images/laurence_playing.jpg`,
+  the largest version published, 657×480). That site names no photographer, so
+  the drawer carries no photo credit — check with Laurence before publishing.
