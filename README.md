@@ -190,8 +190,9 @@ To self-host Lovelo:
   drawing of Stravinsky, not a score by him — the title points at his ragtime
   pieces. The scan in `orig/` carries no credit line, so the rights and any
   required acknowledgement need confirming before publishing.
-- Laurence Cuttriss’s drawer takes its text and photograph from his own site,
-  <https://laurence.cuttriss.co.uk> (source text and provenance noted in
-  `orig/performers/Laurence bio.md`; the photo is `images/laurence_playing.jpg`,
-  the largest version published, 657×480). That site names no photographer, so
-  the drawer carries no photo credit — check with Laurence before publishing.
+- Laurence Cuttriss’s drawer text was supplied by Laurence himself and is not
+  to be reworded; the prose on his site, <https://laurence.cuttriss.co.uk>, is
+  earlier background and is kept in `orig/performers/Laurence bio.md`. His
+  photograph is `images/laurence_playing.jpg` from that site, the largest
+  version published at 657×480. The site names no photographer, so the drawer
+  carries no photo credit — check with Laurence before publishing.
